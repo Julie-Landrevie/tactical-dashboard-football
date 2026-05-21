@@ -31,7 +31,7 @@ Densité d'activité par équipe ou par joueur individuel. Filtrage par type d'�
 ### Installation
 
 ```bash
-git clone https://github.com/TON_USERNAME/tactical-dashboard-football.git
+git clone https://github.com/Julie-Landrevie/tactical-dashboard-football.git
 cd tactical-dashboard-football
 pip install -r requirements.txt
 ```
@@ -109,8 +109,8 @@ Certifiée Sports Analytics (University of Michigan) · Analyse Vidéo et Data (
 
 | Projet | Description | Status |
 |---|---|---|
-| [MPG Optimizer](https://github.com/TON_USERNAME/mpg-optimizer) | Fantasy football analytics | ✅ Live |
-| [World Cup 2026 Predictor](https://github.com/TON_USERNAME/worldcup-2026-predictor) | Prédictions Poisson | 🔨 In progress |
+| [MPG Optimizer](https://github.com/Julie-Landrevie/mpg-optimizer) | Fantasy football analytics | ✅ Live |
+| [World Cup 2026 Predictor](https://github.com/Julie-Landrevie/world-cup-predictor) | Prédictions Poisson | 🔨 In progress |
 | **Tactical Dashboard** | Ce projet | ✅ Live |
 | xG & Shooting Profile | StatsBomb shot analysis | 🔜 Coming soon |
 | Physical & Tracking | SkillCorner player load | 🔜 Coming soon |

@@ -403,18 +403,17 @@ with tab2:
     shots_sorted = shots.sort_values("minute").copy()
 
     fig_xg = go.Figure()
+    fill_colors = {"#4ade80": "rgba(74,222,128,0.08)", "#a5b4fc": "rgba(165,180,252,0.08)"}
     for team_name, color in [(home_team, "#4ade80"), (away_team, "#a5b4fc")]:
         t = shots_sorted[shots_sorted["team"] == team_name].copy()
         t["cum_xg"] = t["xg"].cumsum()
         t = pd.concat([pd.DataFrame({"minute": [0], "cum_xg": [0]}), t[["minute","cum_xg"]]])
 
-        # unused variable removed — was causing index mismatch
-
         fig_xg.add_trace(go.Scatter(
             x=t["minute"], y=t["cum_xg"],
             mode="lines", name=team_name,
             line=dict(color=color, width=2.5),
-            fill="tozeroy", fillcolor=color.replace(")", ",0.05)").replace("rgb(", "rgba(") if "rgb" in color else color + "0d"
+            fill="tozeroy", fillcolor=fill_colors[color]
         ))
 
     fig_xg.update_layout(
