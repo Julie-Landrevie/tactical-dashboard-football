@@ -94,6 +94,16 @@ Données issues de [StatsBomb Open Data](https://github.com/statsbomb/open-data)
 - [ ] Export PDF des analyses
 - [ ] Déploiement Streamlit Cloud
 
+## 🔧 Changelog
+
+### v1.1.0
+- Résolution intelligente des noms de maillot (`name_resolver.py`) — dictionnaire de +250 joueurs + fallback algorithmique
+- Correction des noms tronqués (suppression limite 12 caractères)
+- Sélection match par équipe ou toutes compétitions confondues
+- Timeline xG étendue jusqu'à la fin du match (90min+)
+- Correction couleurs tirs : Bloqué (bleu) et Poteau/Barre (violet)
+- Correction artefacts lors du changement de match
+
 ---
 
 ## 👤 Author

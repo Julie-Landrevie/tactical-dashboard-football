@@ -164,6 +164,7 @@ from statsbombpy import sb
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from name_resolver import build_name_map
 
 # ─── DATA LOADING ─────────────────────────────────────────────────────────────
 COMPETITIONS = {
@@ -187,16 +188,22 @@ with st.sidebar:
         matches_df = load_matches(comp_id, season_id)
 
     teams = sorted(set(matches_df["home_team"].tolist() + matches_df["away_team"].tolist()))
-    team = st.selectbox("Équipe", teams)
 
-    team_matches = matches_df[
-        (matches_df["home_team"] == team) | (matches_df["away_team"] == team)
-    ].copy()
-    team_matches["label"] = team_matches.apply(
+    filter_mode = st.radio("Filtrer par", ["Une équipe", "Toutes les équipes"], horizontal=True)
+    if filter_mode == "Une équipe":
+        team = st.selectbox("Équipe", teams)
+        filtered_matches = matches_df[
+            (matches_df["home_team"] == team) | (matches_df["away_team"] == team)
+        ].copy()
+    else:
+        filtered_matches = matches_df.copy()
+
+    filtered_matches = filtered_matches.sort_values(["home_team","away_team"])
+    filtered_matches["label"] = filtered_matches.apply(
         lambda r: f"{r['home_team']} {r['home_score']}-{r['away_score']} {r['away_team']}", axis=1
     )
-    match_label = st.selectbox("Match", team_matches["label"].tolist())
-    match_row = team_matches[team_matches["label"] == match_label].iloc[0]
+    match_label = st.selectbox("Match", filtered_matches["label"].tolist())
+    match_row = filtered_matches[filtered_matches["label"] == match_label].iloc[0]
     match_id = int(match_row["match_id"])
 
     @st.cache_data(show_spinner=False)
@@ -205,6 +212,13 @@ with st.sidebar:
 
     with st.spinner("Chargement des événements..."):
         events = load_events(match_id)
+
+    @st.cache_data(show_spinner=False)
+    def get_name_map(mid):
+        ev = load_events(mid)
+        return build_name_map(ev)
+
+    name_map = get_name_map(match_id)
 
     home_team = match_row["home_team"]
     away_team = match_row["away_team"]
@@ -299,7 +313,7 @@ with tab1:
                 size = 200 + 600 * (row.get("n_passes", 1) / max_passes)
                 ax.scatter(row["x"], row["y"], s=size, color="#4ade80",
                            edgecolors="#0d0f14", linewidths=1.5, zorder=3)
-                short_name = player.split()[-1] if len(player.split()) > 1 else player
+                short_name = name_map.get(player, player.split()[-1])
                 ax.text(row["x"], row["y"] - 4.5, short_name,
                         fontsize=6.5, color="#e8eaf0", ha="center", va="top",
                         fontfamily="monospace", fontweight="bold", zorder=4)
@@ -310,7 +324,7 @@ with tab1:
         return fig
 
     with col_team1:
-        fig1 = build_pass_network(events, home_team, f"🏠 {home_team}")
+        fig1 = build_pass_network(events, home_team, f"[DOM] {home_team}")
         if fig1:
             st.pyplot(fig1, use_container_width=True)
             plt.close(fig1)
@@ -318,7 +332,7 @@ with tab1:
             st.info("Données insuffisantes pour ce match.")
 
     with col_team2:
-        fig2 = build_pass_network(events, away_team, f"✈️ {away_team}")
+        fig2 = build_pass_network(events, away_team, f"[EXT] {away_team}")
         if fig2:
             st.pyplot(fig2, use_container_width=True)
             plt.close(fig2)
@@ -346,18 +360,23 @@ with tab1:
 # ─────────────────────────────────────────────────────────────────────────────
 with tab2:
     st.markdown('<div class="section-header">Analyse xG & Profil de tir</div>', unsafe_allow_html=True)
-    st.markdown('<div class="tab-description">Carte des tirs avec Expected Goals (xG). La taille des bulles représente la valeur xG du tir. Vert = but, rouge = non cadré, orange = arrêté.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="tab-description">Carte des tirs avec Expected Goals (xG). La taille des bulles représente la valeur xG du tir. Vert = but, orange = arrêté, rouge = non cadré, bleu = bloqué, violet = poteau/barre.</div>', unsafe_allow_html=True)
 
+    # Clé unique par match pour éviter les artefacts
+    _match_key = str(match_id)
     shots = events[events["type"] == "Shot"].copy()
     shots["x"] = shots["location"].apply(lambda l: l[0] if isinstance(l, list) else np.nan)
     shots["y"] = shots["location"].apply(lambda l: l[1] if isinstance(l, list) else np.nan)
     shots["xg"] = pd.to_numeric(shots["shot_statsbomb_xg"], errors="coerce").fillna(0.05)
 
     def shot_color(outcome):
-        if outcome == "Goal": return "#4ade80"
-        if outcome == "Saved": return "#f59e0b"
-        if outcome == "Off T": return "#ef4444"
-        return "#6b7280"
+        if outcome == "Goal":     return "#4ade80"   # vert
+        if outcome == "Saved":    return "#f59e0b"   # orange
+        if outcome == "Off T":    return "#ef4444"   # rouge
+        if outcome == "Blocked":  return "#60a5fa"   # bleu
+        if outcome == "Post":     return "#c084fc"   # violet
+        if outcome == "Wayward":  return "#ef4444"   # rouge (très loin du cadre)
+        return "#6b7280"                              # gris (autre)
 
     shots["color"] = shots["shot_outcome"].apply(shot_color)
 
@@ -389,9 +408,10 @@ with tab2:
         mpatches.Patch(color="#4ade80", label="But"),
         mpatches.Patch(color="#f59e0b", label="Arrêté"),
         mpatches.Patch(color="#ef4444", label="Non cadré"),
-        mpatches.Patch(color="#6b7280", label="Autre"),
+        mpatches.Patch(color="#60a5fa", label="Bloqué"),
+        mpatches.Patch(color="#c084fc", label="Poteau/Barre"),
     ]
-    fig_shot.legend(handles=legend_items, loc="lower center", ncol=4,
+    fig_shot.legend(handles=legend_items, loc="lower center", ncol=5,
                     facecolor="#161a24", edgecolor="#252a38",
                     labelcolor="#e8eaf0", fontsize=8)
     plt.tight_layout()
@@ -404,10 +424,18 @@ with tab2:
 
     fig_xg = go.Figure()
     fill_colors = {"#4ade80": "rgba(74,222,128,0.08)", "#a5b4fc": "rgba(165,180,252,0.08)"}
+    # Fin du match = dernière minute enregistrée, minimum 90
+    match_end = max(int(events["minute"].max()), 90)
     for team_name, color in [(home_team, "#4ade80"), (away_team, "#a5b4fc")]:
         t = shots_sorted[shots_sorted["team"] == team_name].copy()
         t["cum_xg"] = t["xg"].cumsum()
-        t = pd.concat([pd.DataFrame({"minute": [0], "cum_xg": [0]}), t[["minute","cum_xg"]]])
+        # Point de départ à 0, point final à match_end pour que les deux courbes aillent jusqu'au bout
+        final_xg = t["cum_xg"].iloc[-1] if len(t) > 0 else 0
+        t = pd.concat([
+            pd.DataFrame({"minute": [0], "cum_xg": [0]}),
+            t[["minute","cum_xg"]],
+            pd.DataFrame({"minute": [match_end], "cum_xg": [final_xg]})
+        ])
 
         fig_xg.add_trace(go.Scatter(
             x=t["minute"], y=t["cum_xg"],
