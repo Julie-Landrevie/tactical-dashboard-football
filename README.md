@@ -8,6 +8,8 @@
 > Interactive tactical football analysis dashboard built with StatsBomb open data.  
 > Part of Julie Landrevie's football data analysis portfolio.
 
+🔗 **[Live App → julie-landrevie-tactical-dashboard-football.streamlit.app](https://julie-landrevie-tactical-dashboard-football.streamlit.app)**
+
 ---
 
 ## 📊 Features
@@ -51,6 +53,7 @@ L'application s'ouvre sur `http://localhost:8501`. Aucune clé API nécessaire �
 ```
 tactical-dashboard-football/
 ├── app.py              # Main Streamlit application
+├── name_resolver.py    # Player name → shirt name mapping (+250 players)
 ├── requirements.txt    # Python dependencies
 └── README.md
 ```
@@ -61,15 +64,17 @@ tactical-dashboard-football/
 
 Données issues de [StatsBomb Open Data](https://github.com/statsbomb/open-data) — accès libre, aucune authentification requise.
 
-**Compétitions disponibles :**
+**33 compétitions disponibles :**
 
-| Compétition | Saison |
+| Catégorie | Compétitions |
 |---|---|
-| FIFA World Cup | 2022 |
-| La Liga | 2019/2020 |
-| UEFA Champions League | 2018/2019 |
-| UEFA Euro | 2024 |
-| Ligue 1 | 2022/2023 |
+| Coupes du Monde | 2022, 2018, 1990, 1986 |
+| Euros & Copa | UEFA Euro 2024 & 2020, Copa America 2024 |
+| CAN | African Cup of Nations 2023 |
+| Champions League | 11 saisons (2008/09 → 2018/19) |
+| La Liga | 6 saisons (2015/16 → 2020/21) |
+| Ligue 1 | 3 saisons (2015/16, 2021/22, 2022/23) |
+| Autres | Premier League, Bundesliga, Serie A, MLS |
 
 ---
 
@@ -92,9 +97,14 @@ Données issues de [StatsBomb Open Data](https://github.com/statsbomb/open-data)
 - [ ] Analyse des coups de pied arrêtés
 - [ ] Comparaison multi-matchs sur la saison
 - [ ] Export PDF des analyses
-- [ ] Déploiement Streamlit Cloud
+
+---
 
 ## 🔧 Changelog
+
+### v1.2.0
+- 33 compétitions disponibles (toutes les données StatsBomb open data)
+- Déploiement Streamlit Cloud
 
 ### v1.1.0
 - Résolution intelligente des noms de maillot (`name_resolver.py`) — dictionnaire de +250 joueurs + fallback algorithmique
@@ -104,14 +114,18 @@ Données issues de [StatsBomb Open Data](https://github.com/statsbomb/open-data)
 - Correction couleurs tirs : Bloqué (bleu) et Poteau/Barre (violet)
 - Correction artefacts lors du changement de match
 
+### v1.0.0
+- Pass Network, xG & Shots, Pressing, Heatmaps
+- StatsBomb open data intégré
+
 ---
 
 ## 👤 Author
 
 **Julie Landrevie** — Football Data & Video Analyst  
-Certifiée Sports Analytics (University of Michigan) · Analyse Vidéo et Data (Université de Lorraine)  
+Certifiée Sports Analytics (University of Michigan) · Analyse Vidéo et Data (Université de Lorraine)
 
-📧 julie.landrevie@free.fr  
+📧 julie.landrevie@free.fr
 
 ---
 
@@ -121,7 +135,7 @@ Certifiée Sports Analytics (University of Michigan) · Analyse Vidéo et Data (
 |---|---|---|
 | [MPG Optimizer](https://github.com/Julie-Landrevie/mpg-optimizer) | Fantasy football analytics | ✅ Live |
 | [World Cup 2026 Predictor](https://github.com/Julie-Landrevie/world-cup-predictor) | Prédictions Poisson | 🔨 In progress |
-| **Tactical Dashboard** | Ce projet | ✅ Live |
+| **Tactical Dashboard** | Ce projet | ✅ [Live](https://julie-landrevie-tactical-dashboard-football.streamlit.app) |
 | xG & Shooting Profile | StatsBomb shot analysis | 🔜 Coming soon |
 | Physical & Tracking | SkillCorner player load | 🔜 Coming soon |
 | Pass Network Analysis | Team structure deep dive | 🔜 Coming soon |
