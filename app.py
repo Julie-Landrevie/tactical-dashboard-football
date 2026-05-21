@@ -168,11 +168,42 @@ from name_resolver import build_name_map
 
 # ─── DATA LOADING ─────────────────────────────────────────────────────────────
 COMPETITIONS = {
-    "FIFA World Cup 2022": (43, 106),
-    "La Liga 2019/2020": (11, 42),
-    "Champions League 2018/2019": (16, 4),
-    "UEFA Euro 2024": (55, 282),
-    "Ligue 1 2022/2023": (7, 235),
+    # ── Compétitions internationales ──────────────────────────────
+    "🌍 FIFA World Cup 2022":           (43, 106),
+    "🌍 FIFA World Cup 2018":           (43, 3),
+    "🌍 FIFA World Cup 1990":           (43, 55),
+    "🌍 FIFA World Cup 1986":           (43, 54),
+    "🏆 UEFA Euro 2024":                (55, 282),
+    "🏆 UEFA Euro 2020":                (55, 43),
+    "🏆 Copa America 2024":             (223, 282),
+    "🏆 African Cup of Nations 2023":   (1267, 107),
+    # ── Champions League ──────────────────────────────────────────
+    "⭐ Champions League 2018/2019":    (16, 4),
+    "⭐ Champions League 2017/2018":    (16, 1),
+    "⭐ Champions League 2016/2017":    (16, 2),
+    "⭐ Champions League 2015/2016":    (16, 27),
+    "⭐ Champions League 2014/2015":    (16, 26),
+    "⭐ Champions League 2013/2014":    (16, 25),
+    "⭐ Champions League 2012/2013":    (16, 24),
+    "⭐ Champions League 2011/2012":    (16, 23),
+    "⭐ Champions League 2010/2011":    (16, 22),
+    "⭐ Champions League 2009/2010":    (16, 21),
+    "⭐ Champions League 2008/2009":    (16, 41),
+    # ── Ligues nationales ─────────────────────────────────────────
+    "🇪🇸 La Liga 2020/2021":            (11, 90),
+    "🇪🇸 La Liga 2019/2020":            (11, 42),
+    "🇪🇸 La Liga 2018/2019":            (11, 4),
+    "🇪🇸 La Liga 2017/2018":            (11, 1),
+    "🇪🇸 La Liga 2016/2017":            (11, 2),
+    "🇪🇸 La Liga 2015/2016":            (11, 27),
+    "🇫🇷 Ligue 1 2022/2023":            (7, 235),
+    "🇫🇷 Ligue 1 2021/2022":            (7, 108),
+    "🇫🇷 Ligue 1 2015/2016":            (7, 27),
+    "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League 2015/2016":    (2, 27),
+    "🇩🇪 Bundesliga 2023/2024":         (9, 281),
+    "🇩🇪 Bundesliga 2015/2016":         (9, 27),
+    "🇮🇹 Serie A 2015/2016":            (12, 27),
+    "🇺🇸 MLS 2023":                     (44, 107),
 }
 
 with st.sidebar:
