@@ -1,145 +1,112 @@
-# ⚽ Tactical Dashboard — Football Analysis
+# 🗺️ Tactical Dashboard Football
 
-![Python](https://img.shields.io/badge/Python-3.11+-blue?style=flat-square&logo=python)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.32+-red?style=flat-square&logo=streamlit)
-![StatsBomb](https://img.shields.io/badge/Data-StatsBomb_Open_Data-green?style=flat-square)
-![Status](https://img.shields.io/badge/Status-Live-brightgreen?style=flat-square)
+> Dashboards d'analyse tactique interactifs — Pass Network, xG, Pressing, Heatmaps  
+> à partir des données **StatsBomb Open Data**
 
-> Interactive tactical football analysis dashboard built with StatsBomb open data.  
-> Part of Julie Landrevie's football data analysis portfolio.
+**Julie Landrevie — Football Data Analyst**  
+*Certifiée Sports Analytics (University of Michigan) · Analyse Vidéo & Data dans le Sport (Université de Lorraine)*
 
-🔗 **[Live App → julie-landrevie-tactical-dashboard-football.streamlit.app](https://julie-landrevie-tactical-dashboard-football.streamlit.app)**
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tactical-dashboard-football.streamlit.app)
 
 ---
 
-## 📊 Features
+## 📌 Présentation du projet
 
-### 🕸️ Pass Network
-Visualisation du réseau de passes des 11 titulaires. Les nœuds représentent les positions moyennes des joueurs, l'épaisseur des connexions la fréquence des combinaisons.
-
-### 🎯 xG & Shot Analysis
-Carte des tirs avec Expected Goals (xG) — taille des bulles proportionnelle à la dangerosité. Timeline xG cumulé des deux équipes sur l'ensemble du match.
-
-### 🛡️ Pressing & Defensive Block
-Heatmap KDE des zones de pressing et positionnement des récupérations de balle. Approximation du PPDA et distribution temporelle en miroir.
-
-### 🔥 Heatmaps & Activity Zones
-Densité d'activité par équipe ou par joueur individuel. Filtrage par type d'événement (passes, portés, pressions, tirs...). Répartition par tiers du terrain.
+Ce projet propose des dashboards tactiques interactifs permettant d'analyser :
+- Les **réseaux de passes** d'une équipe — qui joue avec qui, les joueurs pivots
+- Le **xG (expected goals)** — qualité des occasions créées et concédées
+- Le **pressing** — intensité défensive, zones de récupération
+- Les **heatmaps** — zones d'activité des joueurs sur le terrain
 
 ---
 
-## 🚀 Getting Started
+## 🎯 Fonctionnalités
 
-### Installation
+| Dashboard | Description |
+|-----------|-------------|
+| **Pass Network** | Réseau de passes de l'équipe — nœuds = joueurs, liens = passes |
+| **xG Map** | Carte des occasions avec valeur xG — taille = dangerosité |
+| **Pressing Map** | Zones de pressing et récupération de balle |
+| **Player Heatmap** | Zones d'activité d'un joueur sur le terrain |
 
-```bash
-git clone https://github.com/Julie-Landrevie/tactical-dashboard-football.git
-cd tactical-dashboard-football
-pip install -r requirements.txt
-```
-
-### Launch
-
-```bash
-streamlit run app.py
-```
-
-L'application s'ouvre sur `http://localhost:8501`. Aucune clé API nécessaire — les données StatsBomb se chargent automatiquement.
+**Filtres disponibles :** Compétition → Match → Équipe → Joueur
 
 ---
 
-## 🗂️ Project Structure
+## 🗂️ Structure du projet
 
 ```
 tactical-dashboard-football/
-├── app.py              # Main Streamlit application
-├── name_resolver.py    # Player name → shirt name mapping (+250 players)
-├── requirements.txt    # Python dependencies
+│
+├── src/
+│   ├── data_loader.py    # Chargement données StatsBomb
+│   ├── metrics.py        # Calcul des métriques tactiques
+│   └── viz.py            # Visualisations mplsoccer
+│
+├── app.py                # Dashboard Streamlit
+├── requirements.txt
 └── README.md
 ```
 
 ---
 
-## 📦 Data
+## ⚙️ Installation & Lancement
 
-Données issues de [StatsBomb Open Data](https://github.com/statsbomb/open-data) — accès libre, aucune authentification requise.
+```bash
+git clone https://github.com/Julie-Landrevie/tactical-dashboard-football.git
+cd tactical-dashboard-football
+pip install -r requirements.txt
+streamlit run app.py
+```
 
-**33 compétitions disponibles :**
-
-| Catégorie | Compétitions |
-|---|---|
-| Coupes du Monde | 2022, 2018, 1990, 1986 |
-| Euros & Copa | UEFA Euro 2024 & 2020, Copa America 2024 |
-| CAN | African Cup of Nations 2023 |
-| Champions League | 11 saisons (2008/09 → 2018/19) |
-| La Liga | 6 saisons (2015/16 → 2020/21) |
-| Ligue 1 | 3 saisons (2015/16, 2021/22, 2022/23) |
-| Autres | Premier League, Bundesliga, Serie A, MLS |
+🌐 **App en ligne :** [tactical-dashboard-football.streamlit.app](https://tactical-dashboard-football.streamlit.app)
 
 ---
 
-## 🛠️ Stack
+## ⚠️ Données StatsBomb Open Data
 
-| Outil | Usage |
-|---|---|
-| `streamlit` | Interface web interactive |
-| `mplsoccer` | Visualisations terrain (pitch) |
-| `statsbombpy` | Accès aux données StatsBomb |
-| `plotly` | Graphiques interactifs |
-| `pandas` / `numpy` | Traitement des données |
-| `matplotlib` | Rendus statiques |
+StatsBomb publie gratuitement une **sélection de matchs** par compétition.  
+Les classements et analyses reflètent cet échantillon, pas une saison entière.
 
 ---
 
-## 🗺️ Roadmap
+## 📦 Stack technique
 
-- [ ] Pizza chart joueur (radar mplsoccer)
-- [ ] Analyse des coups de pied arrêtés
-- [ ] Comparaison multi-matchs sur la saison
-- [ ] Export PDF des analyses
-
----
-
-## 🔧 Changelog
-
-### v1.2.0
-- 33 compétitions disponibles (toutes les données StatsBomb open data)
-- Déploiement Streamlit Cloud
-
-### v1.1.0
-- Résolution intelligente des noms de maillot (`name_resolver.py`) — dictionnaire de +250 joueurs + fallback algorithmique
-- Correction des noms tronqués (suppression limite 12 caractères)
-- Sélection match par équipe ou toutes compétitions confondues
-- Timeline xG étendue jusqu'à la fin du match (90min+)
-- Correction couleurs tirs : Bloqué (bleu) et Poteau/Barre (violet)
-- Correction artefacts lors du changement de match
-
-### v1.0.0
-- Pass Network, xG & Shots, Pressing, Heatmaps
-- StatsBomb open data intégré
+| Catégorie | Outils |
+|-----------|--------|
+| **Données** | statsbombpy — StatsBomb Open Data |
+| **Visualisation terrain** | mplsoccer · matplotlib |
+| **Graphiques** | Plotly |
+| **Dashboard** | Streamlit |
 
 ---
 
-## 👤 Author
+## 🚀 Extensions prévues
 
-**Julie Landrevie** — Football Data & Video Analyst  
-Certifiée Sports Analytics (University of Michigan) · Analyse Vidéo et Data (Université de Lorraine)
-
-📧 julie.landrevie@free.fr
-
----
-
-## 📁 Portfolio
-
-| Projet | Description | Status |
-|---|---|---|
-| [MPG Optimizer](https://github.com/Julie-Landrevie/mpg-optimizer) | Fantasy football analytics | ✅ Live |
-| [World Cup 2026 Predictor](https://github.com/Julie-Landrevie/world-cup-predictor) | Prédictions Poisson | 🔨 In progress |
-| **Tactical Dashboard** | Ce projet | ✅ [Live](https://julie-landrevie-tactical-dashboard-football.streamlit.app) |
-| xG & Shooting Profile | StatsBomb shot analysis | 🔜 Coming soon |
-| Physical & Tracking | SkillCorner player load | 🔜 Coming soon |
-| Pass Network Analysis | Team structure deep dive | 🔜 Coming soon |
+- [ ] Intégration des données de tracking (SkillCorner)
+- [ ] Analyse comparative multi-matchs
+- [ ] Export PDF des rapports tactiques
+- [ ] Analyse du bloc défensif
 
 ---
 
-*Data provided by [StatsBomb](https://statsbomb.com/what-we-do/hub/free-data/) under their open data licence.*
+## 📁 Projets liés
+
+| Projet | Description | Lien |
+|--------|-------------|------|
+| **xG & Shooting Profile Analysis** | Shot quality analysis — StatsBomb | [→ Repo](https://github.com/Julie-Landrevie/xg-shooting-analysis) · [→ App](https://xg-shooting-analysis.streamlit.app) |
+| **MPG Optimizer** | Fantasy football analytics | [→ Repo](https://github.com/Julie-Landrevie/mpg-optimizer) · [→ App](https://mpg-optimizer.streamlit.app) |
+
+---
+
+## 📧 Contact
+
+**Julie Landrevie**  
+📩 julie.landrevie@free.fr  
+🎓 Sports Analytics — University of Michigan (Coursera)  
+🎓 Analyse Vidéo & Data dans le Sport — Université de Lorraine  
+🎓 Dartfish Certified Analyst
+
+---
+
+*Données : [StatsBomb Open Data](https://github.com/statsbomb/open-data) — utilisées conformément à la licence open data StatsBomb.*
