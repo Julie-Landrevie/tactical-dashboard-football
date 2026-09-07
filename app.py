@@ -542,9 +542,9 @@ with tab3:
 
         n_press = len(t_press)
         n_recov = len(t_recov)
-        ppda_approx = round(n_press / max(n_recov, 1), 1)
+        ratio_pressing = round(n_press / max(n_recov, 1), 1)
 
-        ax.set_title(f"{team_name}\n{n_press} pressions · {n_recov} récup. · PPDA≈{ppda_approx}",
+        ax.set_title(f"{team_name}\n{n_press} pressions · {n_recov} récup. · Ratio pressing/recup≈{ratio_pressing}",
                      color="#e8eaf0", fontsize=9.5, fontfamily="sans-serif",
                      fontweight="bold", pad=8)
 
