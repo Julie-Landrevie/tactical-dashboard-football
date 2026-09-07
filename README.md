@@ -36,16 +36,11 @@ Ce projet propose des dashboards tactiques interactifs permettant d'analyser :
 ## 🗂️ Structure du projet
 
 ```
-tactical-dashboard-football/
-│
-├── src/
-│   ├── data_loader.py    # Chargement données StatsBomb
-│   ├── metrics.py        # Calcul des métriques tactiques
-│   └── viz.py            # Visualisations mplsoccer
-│
-├── app.py                # Dashboard Streamlit
-├── requirements.txt
-└── README.md
+tactical-dashboard-football/ 
+├── app.py # Dashboard Streamlit complet (4 onglets) 
+├── name_resolver.py # Résolution des noms de joueurs 
+├── requirements.txt 
+└── README.md 
 ```
 
 ---
