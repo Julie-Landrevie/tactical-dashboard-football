@@ -168,6 +168,17 @@ from name_resolver import build_name_map
 
 # ─── DATA LOADING ─────────────────────────────────────────────────────────────
 COMPETITIONS = {
+    # ── Football féminin ──────────────────────────────────────────
+    "🏆 UEFA Women's Euro 2025":              (53, 315),
+    "🏆 UEFA Women's Euro 2022":              (53, 106),
+    "🌍 Women's World Cup 2023":              (72, 107),
+    "🌍 Women's World Cup 2019":              (72, 30),
+    "🏴 FA Women's Super League 2023/2024":   (37, 281),
+    "🏴 FA Women's Super League 2020/2021":   (37, 90),
+    "🇩🇪 Frauen-Bundesliga 2023/2024":        (135, 281),
+    "🇪🇸 Liga F 2023/2024":                   (182, 281),
+    "🇮🇹 Serie A Women 2023/2024":            (131, 281),
+    "🇺🇸 NWSL 2023":                          (49, 107),
     # ── Compétitions internationales ──────────────────────────────
     "🌍 FIFA World Cup 2022":           (43, 106),
     "🌍 FIFA World Cup 2018":           (43, 3),
@@ -395,7 +406,8 @@ with tab2:
 
     # Clé unique par match pour éviter les artefacts
     _match_key = str(match_id)
-    shots = events[events["type"] == "Shot"].copy()
+    # Tirs du jeu uniquement : la séance de tirs au but (period 5) est exclue
+    shots = events[(events["type"] == "Shot") & (events["period"] < 5)].copy()
     shots["x"] = shots["location"].apply(lambda l: l[0] if isinstance(l, list) else np.nan)
     shots["y"] = shots["location"].apply(lambda l: l[1] if isinstance(l, list) else np.nan)
     shots["xg"] = pd.to_numeric(shots["shot_statsbomb_xg"], errors="coerce").fillna(0.05)
@@ -491,8 +503,9 @@ with tab2:
     metrics = []
     for team_name in [home_team, away_team]:
         t = shots[shots["team"] == team_name]
+        short_name = team_name.replace(" Women's", "")[:12]
         metrics += [
-            (f"Tirs ({team_name[:10]})", len(t)),
+            (f"Tirs ({short_name})", len(t)),
             (f"Cadrés", t["shot_outcome"].isin(["Goal","Saved"]).sum()),
             (f"xG total", f"{t['xg'].sum():.2f}"),
         ]
