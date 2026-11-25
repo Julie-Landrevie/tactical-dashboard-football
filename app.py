@@ -9,7 +9,7 @@ import streamlit as st
 
 warnings.filterwarnings("ignore")
 
-from jl_ui import C, footer, fr_num, header, kpi, mpl_style, pitch_kwargs, plotly_style, setup, t  # noqa: E402
+from jl_ui import C, SEQ, footer, fr_num, header, is_dark, kpi, mpl_style, pitch_kwargs, plotly_style, rgba, setup, t  # noqa: E402
 
 setup("Tactical Dashboard — Julie Landrevie", "Tactical Dashboard — Julie Landrevie", icon="⚽")
 
@@ -26,7 +26,7 @@ from name_resolver import build_name_map  # noqa: E402
 
 mpl_style()
 HOME, AWAY = C["teal"], C["rust"]                       # domicile vert d'eau, extérieur rouille
-TEAL_MAP = LinearSegmentedColormap.from_list("jl_teal", [C["bg"], "#9fd3cc", C["teal"], "#08645c"])
+TEAL_MAP = LinearSegmentedColormap.from_list("jl_teal", [C["bg"], SEQ[1], C["teal"], SEQ[4]])
 
 header("Tactical Dashboard",
        t("Réseau de passes, tirs et xG, pressing et zones d’activité, pour n’importe quel match des données ouvertes StatsBomb.",
@@ -267,7 +267,7 @@ with tab2:
     shots_sorted = shots.sort_values("minute")
     fig_xg = go.Figure()
     match_end = max(int(events["minute"].max()), 90)
-    for team_name, color, fill in [(home_team, HOME, "rgba(13,143,132,0.12)"), (away_team, AWAY, "rgba(204,74,18,0.12)")]:
+    for team_name, color, fill in [(home_team, HOME, rgba(HOME, 0.14)), (away_team, AWAY, rgba(AWAY, 0.14))]:
         tm = shots_sorted[shots_sorted["team"] == team_name].copy()
         tm["cum_xg"] = tm["xg"].cumsum()
         final_xg = tm["cum_xg"].iloc[-1] if len(tm) else 0
@@ -376,7 +376,7 @@ with tab4:
 
     st.markdown(f"### {t('Répartition par tiers du terrain', 'Split by thirds of the pitch')}")
     zones = [("def", t("Tiers défensif", "Defensive third"), C["compare"]),
-             ("mid", t("Tiers médian", "Middle third"), "#9fd3cc"),
+             ("mid", t("Tiers médian", "Middle third"), SEQ[1]),
              ("att", t("Tiers offensif", "Attacking third"), C["teal"])]
 
     def zone_breakdown(team_name):
